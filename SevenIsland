@@ -38,7 +38,7 @@ function onPathAction()
         elseif getMapName() == "Seven Island" then
 			moveToMap("Pokecenter Seven Island")
         elseif getMapName() == "Pokecenter Seven Island" then
-            talkToNpcOnCell(9, 14)
+            talkToNpcOnCell(9, 15)
         end
     end
 end
