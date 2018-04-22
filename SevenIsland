@@ -1,0 +1,59 @@
+-- Copyright © 2016 Silv3r <silv3r@openmailbox.org>
+-- This work is free. You can redistribute it and/or modify it under the
+-- terms of the Do What The Fuck You Want To Public License, Version 2,
+-- as published by Sam Hocevar. See the LICENSE file for more details.
+
+name = "Catch: Event Island (Easter Plateau)"
+author = "JYph"
+description = [[This script will catch your desired pokémon.
+It will also try to capture shinies by throwing pokéballs.
+Start anywhere in Easter Plateau.]]
+
+--// CONFIG //--
+mount = "S Umbreon Mount"
+
+---------// DONT EDIT BELOW SCRIPT IF YOU DONT KNOW WHAT YOU DOING //----------
+function onPathAction()
+
+    if isOutside() and hasItem(mount) and not isSurfing() and not isMounted() then
+        log("Using ".. mount .."......")
+        return useItem(mount)
+    end
+
+    if isPokemonUsable(1) and isPokemonUsable(2) then 
+        if getMapName() == "Pokecenter Seven Island" then
+            moveToMap("Seven Island")
+        elseif getMapName() == "Seven Island" then
+			moveToMap("Canyon Entrance")
+        elseif getMapName() == "Canyon Entrance" then
+			moveToMap("Sevault Canyon")
+        elseif getMapName() == "Sevault Canyon" then
+            moveToRectangle(19, 14, 28, 14)
+        end
+    else
+        if getMapName() == "Sevault Canyon" then
+            moveToMap("Canyon Entrance")
+		elseif getMapName() == "Canyon Entrance" then
+			moveToMap("Seven Island")
+        elseif getMapName() == "Seven Island" then
+			moveToMap("Pokecenter Seven Island")
+        elseif getMapName() == "Pokecenter Seven Island" then
+            talkToNpcOnCell(9, 14)
+        end
+    end
+end
+
+function onBattleAction()
+    if isWildBattle() and getOpponentName() == "Larvitar" or isOpponentShiny() then
+        if getActivePokemonNumber() == 1 then
+           return sendPokemon(2) or sendUsablePokemon() or run()
+       elseif ( getActivePokemonNumber() == 2 ) and ( getOpponentHealth() > 1 ) then
+           return useMove("False Swipe") or sendUsablePokemon() or run()
+       elseif ( getOpponentHealth() == 1 ) then
+           return useItem("Pokeball") or useItem("Great Ball") or useItem("Ultra Ball") or sendUsablePokemon()
+       end    
+   end    
+   if getActivePokemonNumber() >= 1 then
+       return run() or attack() or sendUsablePokemon()        
+   end    
+end
